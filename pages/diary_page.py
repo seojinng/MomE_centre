@@ -9,7 +9,7 @@ from streamlit_option_menu import option_menu
 
 # BERT 모델과 토크나이저 로드
 model_name = 'nlptown/bert-base-multilingual-uncased-sentiment'
-tokenizer = BertTokenizer.from_pretrained(model_name)
+tokenizer = BertTokenizer.from_pretrained(model_name, use_fast=False)
 model = BertForSequenceClassification.from_pretrained(model_name)
 
 # SentiWord_Dict.txt 파일 로드 함수
