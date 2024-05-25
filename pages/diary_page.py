@@ -1,16 +1,20 @@
 import streamlit as st
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
-import random
-import pandas as pd
-import sqlite3
-from datetime import datetime
-from streamlit_option_menu import option_menu
+import os
 
-# BERT 모델과 토크나이저 로드
+# 모델과 토크나이저 로드
 model_name = 'nlptown/bert-base-multilingual-uncased-sentiment'
-tokenizer = BertTokenizer.from_pretrained(model_name, cache_dir="./models", use_fast=True)
-model = BertForSequenceClassification.from_pretrained(model_name, cache_dir="./models")
+model_dir = "./models"
+
+# 모델과 토크나이저를 로컬 디렉토리에서 로드
+@st.cache_resource
+def load_model_and_tokenizer():
+    tokenizer = BertTokenizer.from_pretrained(model_name, cache_dir=model_dir, use_fast=True)
+    model = BertForSequenceClassification.from_pretrained(model_name, cache_dir=model_dir)
+    return tokenizer, model
+
+tokenizer, model = load_model_and_tokenizer()
 
 # SentiWord_Dict.txt 파일 로드 함수
 def load_sentiword_dict(file_path):
