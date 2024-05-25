@@ -2,8 +2,7 @@ streamlit
 streamlit-option-menu
 pandas
 Pillow
-transformers==4.5.1
+transformers[sentencepiece]
 torch
 matplotlib
 numpy
-tokenizers==0.10.3
