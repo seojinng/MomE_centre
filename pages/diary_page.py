@@ -1,7 +1,11 @@
 import streamlit as st
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
-import os
+import random
+import pandas as pd
+import sqlite3
+from datetime import datetime
+from streamlit_option_menu import option_menu  # streamlit_option_menu 임포트 추가
 
 # 모델과 토크나이저 로드
 model_name = 'nlptown/bert-base-multilingual-uncased-sentiment'
@@ -236,7 +240,7 @@ def main():
                     else:
                         st.write("사용한 부정 단어가 없습니다.")
                     
-                    if positive_words:
+                    if positive words:
                         st.write(f"사용한 긍정 단어: {', '.join(positive_words)}")
                     else:
                         st.write("사용한 긍정 단어가 없습니다.")
