@@ -240,7 +240,7 @@ def main():
                     else:
                         st.write("사용한 부정 단어가 없습니다.")
                     
-                    if positive words:
+                    if positive_words:
                         st.write(f"사용한 긍정 단어: {', '.join(positive_words)}")
                     else:
                         st.write("사용한 긍정 단어가 없습니다.")
