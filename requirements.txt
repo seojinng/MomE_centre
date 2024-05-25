@@ -1,4 +1,4 @@
-pip==21.3.1  # pip 최신 버전으로 업그레이드
+pip==21.3.1
 streamlit
 streamlit-option-menu
 pandas
