@@ -149,7 +149,7 @@ def main():
             font-size: 16px; /* 텍스트 영역의 폰트 크기 설정 */
         }
         .stButton button {
-            background-color: #4CAF50; /* 버튼 배경색을 녹색으로 설정 */
+            background-color: #FFF9EF; /* 윤해 피그마에 있는 색 아무거나 가져옴 */
             color: white; /* 버튼 글자색을 흰색으로 설정 */
             border: none; /* 버튼 테두리 없애기 */
             border-radius: 12px; /* 버튼 테두리를 둥글게 설정 */
@@ -162,7 +162,7 @@ def main():
             cursor: pointer; /* 커서를 포인터로 설정 */
         }
         .stButton button:hover {
-            background-color: #45a049; /* 버튼 호버 시 배경색 설정 */
+            background-color: #FFEEEE; /* 버튼 호버 시 배경색 설정 */
         }
         .stDataFrame {
             font-size: 16px; /* 데이터프레임 폰트 크기 설정 */
