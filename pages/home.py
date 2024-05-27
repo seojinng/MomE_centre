@@ -353,7 +353,3 @@ with st.sidebar:
         st.switch_page("pages/community.py")
     elif menu == 'LogOut':
         st.switch_page("dd1.py")
-
-if __name__ == "__main__":
-    init_db()
-    main()
