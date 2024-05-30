@@ -174,8 +174,8 @@ with tab3:
 
 
 with st.sidebar:
-    menu = option_menu("MomE", ['Home','Dashboard','Diary','육아 SNS','community' '하루 자가진단', 'LogOut'],
-                        icons=['bi bi-house-fill','bi bi-grid-1x2-fill','book-half','Bi bi-star-fill','Bi bi-star-fill' ,'bi bi-capsule-pill', 'box-arrow-in-right'],
+    menu = option_menu("MomE", ['Home','Dashboard','Diary','육아 SNS','To do list','하루 자가진단', 'LogOut'],
+                        icons=['bi bi-house-fill','bi bi-grid-1x2-fill','book-half','Bi bi-star-fill','Bi bi-calendar-check' ,'bi bi-capsule-pill', 'box-arrow-in-right'],
                         menu_icon="baby", default_index=1,
                         styles={
                             "icon": {"font-size": "23px"},
@@ -189,8 +189,8 @@ elif menu =='Diary':
     st.switch_page("pages/diary_page.py")
 elif menu == '육아 SNS':
     st.switch_page("pages/SNS2.py")
-elif menu == 'community':
-    st.switch_page("pages/community.py")
+elif menu == 'To do list':
+    st.switch_page("pages/daily_schedule.py")
 elif menu =='하루 자가진단': 
     st.switch_page("pages/self_diagnosis.py")
 elif menu =='LogOut':
