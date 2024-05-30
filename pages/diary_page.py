@@ -5,7 +5,7 @@ import random
 import pandas as pd
 import sqlite3
 from datetime import datetime
-from streamlit_option_menu import option_menu  # streamlit_option_menu 임포트 추가
+from streamlit_option_menu import option_menu
 
 # 모델과 토크나이저 로드
 model_name = 'nlptown/bert-base-multilingual-uncased-sentiment'
@@ -96,6 +96,7 @@ def init_db():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS diary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
             date TEXT,
             diary TEXT,
             sentiment TEXT,
@@ -106,21 +107,21 @@ def init_db():
     conn.close()
 
 # SQLite 데이터베이스에 일기 데이터를 저장하는 함수
-def save_diary_to_db(date, diary, sentiment, message):
+def save_diary_to_db(username, date, diary, sentiment, message):
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
     cursor.execute('''
-        INSERT INTO diary (date, diary, sentiment, message)
-        VALUES (?, ?, ?, ?)
-    ''', (date, diary, str(sentiment), message))
+        INSERT INTO diary (username, date, diary, sentiment, message)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (username, date, diary, str(sentiment), message))
     conn.commit()
     conn.close()
 
-# SQLite 데이터베이스에서 일기 데이터를 불러오는 함수
-def load_diary_data():
+# SQLite 데이터베이스에서 특정 사용자의 일기 데이터를 불러오는 함수
+def load_diary_data(username):
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT date, diary, sentiment, message FROM diary')
+    cursor.execute('SELECT date, diary, sentiment, message FROM diary WHERE username = ?', (username,))
     rows = cursor.fetchall()
     conn.close()
     return pd.DataFrame(rows, columns=['Date', 'Diary', 'Sentiment', 'Message'])
@@ -207,7 +208,7 @@ def main():
                 sentiment_probs, result_message = interpret_sentiment(probabilities)
 
                 # 일기 데이터 저장
-                save_diary_to_db(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), user_input, sentiment_probs, result_message)
+                save_diary_to_db(st.session_state['logged_in_user'], datetime.now().strftime('%Y-%m-%d %H:%M:%S'), user_input, sentiment_probs, result_message)
 
                 # 상태에 분석 결과 저장
                 st.session_state['sentiment_probs'] = sentiment_probs
@@ -251,7 +252,7 @@ def main():
 
         with tabs[2]:
             st.write("### 지난 일기")
-            diary_data = load_diary_data()
+            diary_data = load_diary_data(st.session_state['logged_in_user'])
             
             if not diary_data.empty:
                 selected_date = st.selectbox("날짜 선택", diary_data['Date'].unique())
@@ -271,8 +272,8 @@ def main():
         st.error("로그인 후 이용해주세요")
 
 with st.sidebar:
-    menu = option_menu("MomE", ['Home','Dashboard','Diary','육아 SNS','community', '하루 자가진단', 'LogOut'],
-                        icons=['bi bi-house-fill','bi bi-grid-1x2-fill','book-half','Bi bi-star-fill','Bi bi-star-fill' ,'bi bi-capsule-pill', 'box-arrow-in-right'],
+    menu = option_menu("MomE", ['Home','Dashboard','Diary','육아 SNS','To do list', '하루 자가진단', 'LogOut'],
+                        icons=['bi bi-house-fill','bi bi-grid-1x2-fill','book-half','Bi bi-star-fill','Bi bi-calendar-check' ,'bi bi-capsule-pill', 'box-arrow-in-right'],
                         menu_icon="baby", default_index=2,
                         styles={
                             "icon": {"font-size": "23px"},
@@ -286,14 +287,12 @@ elif menu =='Dashboard':
     st.switch_page("pages/dashboard_page.py")
 elif menu == '육아 SNS':
     st.switch_page("pages/SNS2.py")
-elif menu == 'community':
-    st.switch_page("pages/community.py")
+elif menu == 'To do list':
+    st.switch_page("pages/daily_schedule.py")
 elif menu =='하루 자가진단': 
     st.switch_page("pages/self_diagnosis.py")
 elif menu =='LogOut':
-    st.session_state['logged_in'] = False
-    st.session_state['logged_in_user'] = ''
-    st.experimental_rerun()
+    st.switch_page('dd1.py')
 
 if __name__ == "__main__":
     main()
