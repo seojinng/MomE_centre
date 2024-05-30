@@ -83,7 +83,7 @@ def view(posts):
         st.markdown("---")
 
 def viewmy(posts):
-    for post_id, username, image, post, timestamp in reversed(posts):  # 최신 게시물부터 표시하기 위해 reversed 사용
+    for post_id, username, image, post, timestamp, is_public in reversed(posts):  # 최신 게시물부터 표시하기 위해 reversed 사용
         st.markdown(f"**{username}**")
         if image:
             st.image(image, caption=username, use_column_width=True)
@@ -92,7 +92,7 @@ def viewmy(posts):
         col1, col2 = st.columns([1, 1])
         with col1:
             if st.button("수정", key=f"edit_post_{post_id}"):
-                edit_posts, edit_image, edit_timestamp, edit_ispublic = edit_post(post_id, image, post, timestamp)
+                edit_posts, edit_image, edit_timestamp, edit_ispublic = edit_post(post_id, image, post, timestamp, is_public)
         with col2:
             if st.button("삭제", key=f"delete_post_{post_id}"):
                 delete_post(post_id)
@@ -113,10 +113,10 @@ def viewmy(posts):
         st.markdown(f'<p style="text-align: right;">{timestamp}</p>', unsafe_allow_html=True)
         st.markdown("---")
 
-def edit_post(post_id, image, post, timestamp):
+def edit_post(post_id, image, post, timestamp, is_public):
     edited_image = None
-    edited_post = st.text_area("게시물 수정", key=f"edit2_post_{post_id}")
-    edited_is_public = st.checkbox("전체 공개로 수정", key=f"edit_public_post_{post_id}")
+    edited_post = st.text_area("게시물 수정", value=post, key=f"edit2_post_{post_id}")
+    edited_is_public = st.checkbox("전체 공개로 수정", value=is_public, key=f"edit_public_post_{post_id}")
     
     if image:
         edited_image = st.file_uploader("이미지를 수정하세요.", type=['png', 'jpg', 'jpeg'], 
