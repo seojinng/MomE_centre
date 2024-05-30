@@ -207,6 +207,17 @@ if homeImg:
         </div>
     ''', unsafe_allow_html=True)
 
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')   
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+
     row1, row2 = st.columns(2)
 
     with row1:
