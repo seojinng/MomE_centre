@@ -87,6 +87,7 @@ def recommend_topics(topics, num=6):
 def init_db():
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
+    cursor.execute('DROP TABLE IF EXISTS diary')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS diary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,14 +103,18 @@ def init_db():
 
 # SQLite 데이터베이스에 일기 데이터를 저장하는 함수
 def save_diary_to_db(username, date, diary, sentiment, message):
-    conn = sqlite3.connect('diary.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO diary (username, date, diary, sentiment, message)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (username, date, diary, str(sentiment), message))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect('diary.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO diary (username, date, diary, sentiment, message)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (username, date, diary, str(sentiment), message))
+        conn.commit()
+    except sqlite3.OperationalError as e:
+        st.error(f"An error occurred while saving the diary: {e}")
+    finally:
+        conn.close()
 
 # SQLite 데이터베이스에서 특정 사용자의 일기 데이터를 불러오는 함수
 def load_diary_data(username):
@@ -119,7 +124,7 @@ def load_diary_data(username):
         cursor.execute('SELECT date, diary, sentiment, message FROM diary WHERE username = ?', (username,))
         rows = cursor.fetchall()
     except sqlite3.OperationalError as e:
-        st.error(f"An error occurred: {e}")
+        st.error(f"An error occurred while loading the diary: {e}")
         rows = []
     conn.close()
     return pd.DataFrame(rows, columns=['Date', 'Diary', 'Sentiment', 'Message'])
