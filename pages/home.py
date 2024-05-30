@@ -8,7 +8,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: #FEF9F0;
+        background: #F1E2DD;
         font = 'Noto Serif KR' /* 기본 폰트 설정 */
     }
     .Container {
