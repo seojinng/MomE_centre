@@ -24,7 +24,7 @@ def view_all_posts():
     return data
 
 def view_my_posts(user, is_public):
-    c.execute('SELECT rowid, username, image, post, timestamp FROM poststable WHERE username = ? AND is_public = ?', (user, is_public))
+    c.execute('SELECT rowid, username, image, post, timestamp, is_public FROM poststable WHERE username = ? AND is_public = ?', (user, is_public))
     data = c.fetchall()
     return data
 
@@ -116,7 +116,7 @@ def viewmy(posts):
 def edit_post(post_id, image, post, timestamp, is_public):
     edited_image = None
     edited_post = st.text_area("게시물 수정", value=post, key=f"edit2_post_{post_id}")
-    edited_is_public = st.checkbox("전체 공개로 수정", value=is_public, key=f"edit_public_post_{post_id}")
+    edited_is_public = st.checkbox("전체 공개로 수정", value=bool(is_public), key=f"edit_public_post_{post_id}")
     
     if image:
         edited_image = st.file_uploader("이미지를 수정하세요.", type=['png', 'jpg', 'jpeg'], 
