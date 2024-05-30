@@ -3,26 +3,28 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import os
 
+# Google Fonts에서 Noto Sans KR 폰트를 로드하는 스타일 추가
 st.markdown(
     """
     <style>
-    .stApp{
+    .stApp {
         background: #FEF9F0;
+        font = 'Noto Serif KR' /* 기본 폰트 설정 */
     }
-    .Container{
+    .Container {
         width: 710px;
         width: 100%; /* 부모 컨테이너 너비 */
         height: 100vh; /* 부모 컨테이너 높이 */
         overflow: hidden;
         border-radius: 30px;
     }
-    .homeImg{
+    .homeImg {
         position: relative; /* 내부 요소 고정 */
         width: 707px;
         height: 471px;
         border-radius: 30px;
     }
-    .textContainer{
+    .textContainer {
         position: absolute;
         top: 10%;
         left: 75%;
@@ -34,21 +36,21 @@ st.markdown(
         height: 90px;
         text-align: start;
     }
-    .logo{
+    .logo {
         font-size: 60px;
         font-weight: bold;
         color: white;
     }
-    .logo-below{
+    .logo-below {
         position: absolute; /* 위치 고정 */
         top: 80%;
         left: 1%;
         width: 120px;
         font-size: 13px;
-        font-weight:lighter;
+        font-weight: lighter;
         color: white;
     }
-    .adText{
+    .adText {
         position: absolute; /* 위치 고정 */
         top: 28%;
         left: 30%;
@@ -68,29 +70,29 @@ st.markdown(
         width: 707px;
         height: 2150px;
         background-color: white;
-        border-radius:  30px 30px 0px 0px;
+        border-radius: 30px 30px 0px 0px;
     }
-    .contentIndex{
+    .contentIndex {
         font-weight: bold;
         font-size: 20px;
         margin-top: 20px;
         margin-bottom: 30px;
     }
-    .aboutUsContent{
+    .aboutUsContent {
         text-align: center;
         margin-bottom: 35px;
-        font-size:17px;
+        font-size: 17px;
     }
-    .divider{
-        width:250px;
-        height:2px;
+    .divider {
+        width: 250px;
+        height: 2px;
         background-color: black;
         margin-bottom: 55px;
     }
-    .serviceComponent{
+    .serviceComponent {
         position: relative;
-        margin-left:22.5px;
-        margin-right:50px;
+        margin-left: 22.5px;
+        margin-right: 50px;
         margin-bottom: 24px;
         width: 302px;
         height: 240px;
@@ -100,7 +102,7 @@ st.markdown(
         flex-direction: column;
         align-items: start;
     }
-    .titleContainer{
+    .titleContainer {
         margin: 30px 0px 20px 35px;
         position: relative;
         width: 200;
@@ -109,25 +111,23 @@ st.markdown(
         flex-direction: row;
         align-items: center;
     }
-    .titleBar{
+    .titleBar {
         position: relative;
         width: 2px;
         height: 42px;
-        background-color: #000000; 
+        background-color: #000000;
         margin-right: 10px;
-
     }
-    .title{
-        margin-top:4px;
+    .title {
+        margin-top: 4px;
         margin-right: 40px;
         position: relative;
         font-size: 20px;
         font-weight: bold;
         color: black;
         line-height: 1.2;
-        
     }
-    .serviceDetail{
+    .serviceDetail {
         color: black;
         font-weight: 800px;
         margin-left: 30px;
@@ -138,27 +138,26 @@ st.markdown(
         width: 240px;
         height: 50px;
     }
-    .imgContainer{
-        width:302px;
-        height:420px;
+    .imgContainer {
+        width: 302px;
+        height: 420px;
         margin-left: 25px;
         margin-bottom: 20px;
     }
-    .copyRightDivider{
-        width:600px;
-        height:1.7px;
+    .copyRightDivider {
+        width: 600px;
+        height: 1.7px;
         background-color: black;
         margin-bottom: 55px;
     }
-    .contact{
+    .contact {
         margin: 0px 12px;
-        font-size:10px;
-        
+        font-size: 10px;
     }
-        </style>
-            """,
-            unsafe_allow_html=True
-        )
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 def load_image(image_path):
     if not os.path.exists(image_path):
@@ -223,10 +222,10 @@ if homeImg:
                     가족과 함께 일상을 공유해보세요.
                 </div>
             </div>
-            """
-            , unsafe_allow_html=True
-        )    
-        
+            """,
+            unsafe_allow_html=True
+        )
+
         Img_02 = load_image(Img2_path)
         if Img_02:
             st.markdown(
@@ -237,7 +236,7 @@ if homeImg:
                 ''',
                 unsafe_allow_html=True
             )
-        
+
         st.markdown(f"""
             <div class="serviceComponent">
                 <div class="titleContainer">
@@ -250,10 +249,10 @@ if homeImg:
                     기본정보 제공합니다.
                 </div>
             </div>
-            """
-            , unsafe_allow_html=True
+            """,
+            unsafe_allow_html=True
         )
-        
+
         Img_04 = load_image(Img4_path)
         if Img_04:
             st.markdown(
@@ -264,7 +263,7 @@ if homeImg:
                 ''',
                 unsafe_allow_html=True
             )
-    
+
     with row2:
         Img_01 = load_image(Img1_path)
         if Img_01:
@@ -287,10 +286,10 @@ if homeImg:
                     일기장 단어 분석을 통해<br>감정 변화를 추적하고 긍정적인<br>피드백을 제공하여 더 건강한 육아를 할 수 있도록 지원합니다.
                 </div>
             </div>
-            """
-            , unsafe_allow_html=True
-        )    
-    
+            """,
+            unsafe_allow_html=True
+        )
+
         Img_03 = load_image(Img3_path)
         if Img_03:
             st.markdown(
@@ -301,7 +300,7 @@ if homeImg:
                 ''',
                 unsafe_allow_html=True
             )
-    
+
         st.markdown(f"""
             <div class="serviceComponent">
                 <div class="titleContainer">
@@ -315,13 +314,13 @@ if homeImg:
                     제공합니다. 
                 </div>
             </div>
-            """
-            , unsafe_allow_html=True
-        )    
+            """,
+            unsafe_allow_html=True
+        )
 
     st.divider()
 
-    # 문의 및 저작권 표시 
+    # 문의 및 저작권 표시
     st.markdown("""
         <div class="contact">
             MomE ｜ 주소 경기도 용인시 처인구 외대로 81 한국외국어대학교 ｜ 이메일 susu492@naver.com<br>
@@ -330,6 +329,7 @@ if homeImg:
     """, unsafe_allow_html=True)
 else:
     st.error("Failed to load the home image.")
+
 # Sidebar menu
 with st.sidebar:
     menu = option_menu("MomE", ['Home', 'Dashboard', 'Diary', '육아 SNS', 'community', '하루 자가진단', 'LogOut'],
