@@ -143,6 +143,18 @@ def main():
             color: #000000;
             font-family: 'Helvetica', sans-serif;
         }
+        .stApp{
+            background: #F1E2DD;
+            }
+            /* Customize tab content background */
+        .stTabs [role="tabpanel"] {
+            background-color: #ffffff; /* Change this to your desired content background color */
+            border-top: none;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 5px 5px 5px #DFDCD5;
+            height: 750px;
+            }
         .reportview-container .main .block-container {
             max-width: 80%;
             margin: auto;
@@ -171,39 +183,76 @@ def main():
         .stDataFrame {
             font-size: 16px;
         }
-        .topic-card {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 5px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            color: #000000;
-            font-size: 16px;
+        .topic-card{
+            background-color: #FEF8F6;
+            font-weight: normal;
+            box-shadow: 5px 5px 5px #DFDCD5;
+            margin:5px;
+            border-radius: 10px;
+            padding: 7px;}
         }
         .stMarkdown h1 {
             font-size: 24px;
         }
+        .title{
+            font-size: 60px;
+            font-weight: bold;
+            text-align: start;
+            width: 50px;
+            line-height: 1;
+            letter-spacing: 0;
+            color: #4A4A4A;
+        }
+        .subtitle{
+            font-size: 25px;
+            font-weight:bold;
+            text-align: start;
+            line-height: 1;
+            letter-spacing: 0;
+            margin-bottom: 10px;
+            color: #4A4A4A;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .topic{
+            margin: 7px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
         </style>
         """,
         unsafe_allow_html=True
     )
 
     if 'logged_in' in st.session_state and st.session_state['logged_in']:
-        st.title("오늘 하루는 어떠셨나요? 일기를 작성해주세요!")
-
+        st.image('media/diaryTitleImg.jpg')
+        
         tabs = st.tabs(["일기 작성", "분석 결과", "지난 일기"])
 
         with tabs[0]:
-            st.write("### 일기 주제 추천")
+            st.markdown(
+                '''
+                  <div class="subtitle">일기 주제 추천</div>
+        
+                ''',unsafe_allow_html=True
+            )   
             recommended_topics = recommend_topics(topics, num=6)
 
             topic_cols = st.columns(2)
 
             for idx, topic in enumerate(recommended_topics):
                 with topic_cols[idx % 2]:
-                    st.markdown(f"<div class='topic-card'>• {topic}</div>", unsafe_allow_html=True)
+                    st.markdown(f'''<div class='topic-card'>
+                                        <div class='topic'>
+                                            {topic}
+                                        </div>
+                                </div>''', unsafe_allow_html=True) 
+            st.write("")
 
-            user_input = st.text_area("텍스트를 입력하세요:", "여기에 일기를 작성해 주세요.")
+            user_input = st.text_area('',placeholder="여기에 일기를 작성해 주세요.", height=300)
             
             if st.button("분석하기"):
                 probabilities = analyze_sentiment_bert(user_input)
