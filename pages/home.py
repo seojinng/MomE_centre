@@ -163,10 +163,14 @@ def load_image(image_path):
     if not os.path.exists(image_path):
         st.error(f"File not found: {image_path}")
         return None
-    with open(image_path, "rb") as f:
-        data = f.read()
-    encoded_image = base64.b64encode(data).decode()
-    return encoded_image
+    try:
+        with open(image_path, "rb") as f:
+            data = f.read()
+        encoded_image = base64.b64encode(data).decode()
+        return encoded_image
+    except Exception as e:
+        st.error(f"Error loading image: {e}")
+        return None
 
 image_path = "./media/homeImg.jpg"
 Img1_path = './media/Img1.jpg'
@@ -202,9 +206,6 @@ if homeImg:
             </div>
         </div>
     ''', unsafe_allow_html=True)
-
-    for i in range(9):
-        st.write('')
 
     row1, row2 = st.columns(2)
 
@@ -332,9 +333,9 @@ else:
 
 # Sidebar menu
 with st.sidebar:
-    menu = option_menu("MomE", ['Home', 'Dashboard', 'Diary', '육아 SNS', 'community', '하루 자가진단', 'LogOut'],
-                        icons=['bi bi-house-fill', 'bi bi-grid-1x2-fill', 'book-half', 'Bi bi-star-fill', 'Bi bi-star-fill', 'bi bi-capsule-pill', 'box-arrow-in-right'],
-                        menu_icon="baby", default_index=5,
+    menu = option_menu("MomE", ['Home', 'Dashboard', 'Diary', '육아 SNS', 'To do list', '하루 자가진단', 'LogOut'],
+                        icons=['bi bi-house-fill', 'bi bi-grid-1x2-fill', 'book-half', 'Bi bi-star-fill', 'Bi bi-calendar-check', 'bi bi-capsule-pill', 'box-arrow-in-right'],
+                        menu_icon="baby", default_index=0,
                         styles={
                             "icon": {"font-size": "23px"},
                             "title": {"font-weight": "bold"}
@@ -344,12 +345,12 @@ with st.sidebar:
     if menu == 'Dashboard':
         st.switch_page("pages/dashboard_page.py")
     elif menu == 'Diary':
-        st.switch_page("pages/diary_page.py")
+        st.switch_page('pages/diary_page.py')
     elif menu == '육아 SNS':
-        st.switch_page("pages/SNS2.py")
-    elif menu == 'Home':
-        st.switch_page("pages/home.py")
-    elif menu == 'community':
-        st.switch_page("pages/community.py")
+        st.switch_page('pages/SNS2.py')
+    elif menu == 'To do list':
+        st.switch_page('pages/daily_schedule.py')
+    elif menu == '하루 자가진단': 
+        st.switch_page('pages/self_diagnosis.py')
     elif menu == 'LogOut':
-        st.switch_page("dd1.py")
+        st.switch_page('dd1.py')
