@@ -34,7 +34,7 @@ sentiword_dict = load_sentiword_dict('pages/SentiWord_Dict.txt')
 
 # BERT를 사용한 감성 분석 함수
 def analyze_sentiment_bert(text):
-    inputs = tokenizer(text, return_t tensors="pt", padding=True, truncation=True, max_length=512)
+    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
     outputs = model(**inputs)
     probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
     return probs.detach().numpy()[0]
