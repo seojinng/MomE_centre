@@ -165,8 +165,8 @@ def main():
             font-size: 16px;
         }
         .stButton button {
-            background-color: #FFF9EF;
-            color: white;
+            background-color: #FEF8F6;
+            color: black;
             border: none;
             border-radius: 12px;
             padding: 10px 24px;
