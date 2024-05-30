@@ -166,8 +166,8 @@ def main():
             font-size: 16px;
         }
         .stButton button {
-            background-color: #FEF8F6;
-            color: black;
+            background-color: #FFF9EF;
+            color: white;
             border: none;
             border-radius: 12px;
             padding: 10px 24px;
@@ -277,7 +277,8 @@ def main():
                 
                 st.write("### 감정 분포")
                 # 원형 차트로 변경
-                fig = px.pie(values=list(st.session_state['sentiment_probs'].values()), names=list(st.session_state['sentiment_probs'].keys()), title="감정 분포")
+                custom_colors = ['#C5E99B', '#8FBC94', '#5A9367', '#44633F', '#3F4B3B']  # 원하는 색상 리스트
+                fig = px.pie(values=list(st.session_state['sentiment_probs'].values()), names=list(st.session_state['sentiment_probs'].keys()), title="감정 분포", color_discrete_sequence=custom_colors)
                 st.plotly_chart(fig)
                 
                 found_words = find_sentiwords(st.session_state['user_input'], sentiword_dict)
@@ -327,10 +328,7 @@ with st.sidebar:
                         menu_icon="baby", default_index=2,
                         styles={
                             "icon": {"font-size": "23px"},
-                            "title": {"font-weight": "bold"},
-                            "container": {"background-color": "#fffff"},
-                            "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px","--hover-font-size": "18px"},
-                            "nav-link-selected": {"background-color": "#ECCBC4", "color":"black", "font-weight":"normal"}
+                            "title": {"font-weight": "bold"}
                         })
 
 if menu =='Home':
