@@ -6,6 +6,7 @@ import pandas as pd
 import sqlite3
 from datetime import datetime
 from streamlit_option_menu import option_menu
+import plotly.express as px
 
 # 모델과 토크나이저 로드
 model_name = 'nlptown/bert-base-multilingual-uncased-sentiment'
@@ -165,8 +166,8 @@ def main():
             font-size: 16px;
         }
         .stButton button {
-            background-color: #FEF8F6;
-            color: black;
+            background-color: #FFF9EF;
+            color: white;
             border: none;
             border-radius: 12px;
             padding: 10px 24px;
@@ -275,7 +276,9 @@ def main():
                 st.write(f"선택된 메시지: {st.session_state['result_message']}")
                 
                 st.write("### 감정 분포")
-                st.bar_chart(st.session_state['sentiment_probs'])
+                # 원형 차트로 변경
+                fig = px.pie(values=list(st.session_state['sentiment_probs'].values()), names=list(st.session_state['sentiment_probs'].keys()), title="감정 분포")
+                st.plotly_chart(fig)
                 
                 found_words = find_sentiwords(st.session_state['user_input'], sentiword_dict)
                 if found_words:
