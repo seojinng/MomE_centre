@@ -277,7 +277,7 @@ def main():
                 
                 st.write("### 감정 분포")
                 # 원형 차트로 변경
-                custom_colors = ['#B2E1C9', '#D4EFCB','#D8D8D8','#FFC4B2','#FFA3A3']  # 원하는 색상 리스트
+                custom_colors = ['#A8E6CF','#DCEDC1','#E0E0E0','#FFAAA5','#FF8B94']  # 원하는 색상 리스트
                 fig = px.pie(values=list(st.session_state['sentiment_probs'].values()), names=list(st.session_state['sentiment_probs'].keys()), title="감정 분포", color_discrete_sequence=custom_colors)
                 st.plotly_chart(fig)
                 
