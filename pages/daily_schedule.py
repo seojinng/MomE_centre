@@ -84,7 +84,7 @@ def schedule_form():
         if task:
             add_schedule(date.strftime("%Y-%m-%d"), time.strftime("%H:%M:%S"), task, comments)
             st.success("일정이 저장되었습니다.")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("할 일을 입력해주세요.")
 
@@ -101,7 +101,7 @@ def schedule_list():
         """, unsafe_allow_html=True)
         if st.button("일정 삭제", key=f'delete_button_{schedule[0]}'):
             delete_schedule(schedule[0])
-            st.experimental_rerun()
+            st.rerun()
         st.write("---")
 
 # 일정 전체 삭제 함수
@@ -112,7 +112,7 @@ def delete_all_schedules():
     conn.commit()
     conn.close()
     st.success("모든 일정이 삭제되었습니다.")
-    st.experimental_rerun()
+    st.rerun()
 
 # Streamlit 앱 실행
 def main():
