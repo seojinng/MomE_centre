@@ -3,8 +3,14 @@ import streamlit as st
 from datetime import datetime
 from streamlit_option_menu import option_menu
 
+# 로그인 상태를 확인하는 함수
+def check_login():
+    if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
+        st.error("로그인 후 이용해주세요")
+        st.stop()
+
 with st.sidebar:
-    menu = option_menu("MomE", ['Home', 'Dashboard', 'Diary', '육아 SNS', '하루 일과 관리', '하루 자가진단', 'LogOut'],
+    menu = option_menu("MomE", ['Home', 'Dashboard', 'Diary', '육아 SNS', 'To do list', '하루 자가진단', 'LogOut'],
                         icons=['bi bi-house-fill', 'bi bi-grid-1x2-fill', 'book-half', 'Bi bi-star-fill', 'Bi bi-calendar-check', 'bi bi-capsule-pill', 'box-arrow-in-right'],
                         menu_icon="baby", default_index=4,
                         styles={
@@ -23,6 +29,7 @@ with st.sidebar:
     elif menu == '하루 자가진단':
         st.switch_page('pages/self_diagnosis.py')
     elif menu == 'LogOut':
+        st.session_state['logged_in'] = False
         st.switch_page("dd1.py")
 
 # 데이터베이스 초기화
@@ -109,6 +116,9 @@ def delete_all_schedules():
 
 # Streamlit 앱 실행
 def main():
+    # 로그인 상태 확인
+    check_login()
+    
     # CSS 스타일 추가
     st.markdown(
         """
