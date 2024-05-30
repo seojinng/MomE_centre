@@ -74,11 +74,11 @@ def view(posts):
         if liked:
             if st.button(f"좋아요 취소 ({like_count})", key=f"unlike_{post_id}"):
                 unlike_post(post_id, user)
-                st.experimental_rerun()
+                st.rerun()
         else:
             if st.button(f"좋아요 ({like_count})", key=f"like_{post_id}"):
                 like_post(post_id, user)
-                st.experimental_rerun()
+                st.rerun()
 
         st.markdown("---")
 
@@ -96,7 +96,7 @@ def viewmy(posts):
         with col2:
             if st.button("삭제", key=f"delete_post_{post_id}"):
                 delete_post(post_id)
-                st.experimental_rerun()
+                st.rerun()
         
         like_count = get_like_count(post_id)
         liked = has_liked(post_id, user)
@@ -104,11 +104,11 @@ def viewmy(posts):
         if liked:
             if st.button(f"좋아요 취소 ({like_count})", key=f"unlike_my_{post_id}"):
                 unlike_post(post_id, user)
-                st.experimental_rerun()
+                st.rerun()
         else:
             if st.button(f"좋아요 ({like_count})", key=f"like_my_{post_id}"):
                 like_post(post_id, user)
-                st.experimental_rerun()
+                st.rerun()
 
         st.markdown(f'<p style="text-align: right;">{timestamp}</p>', unsafe_allow_html=True)
         st.markdown("---")
@@ -129,7 +129,7 @@ def edit_post(post_id, image, post, timestamp):
         new_is_public = 1 if edited_is_public else 0
         update_post(post_id, new_post, new_is_public)
         st.success("게시물이 성공적으로 수정되었습니다.")
-        st.experimental_rerun()
+        st.rerun()
     return post, image, timestamp, is_public
 
 def update_post(post_id, new_post, new_is_public):
