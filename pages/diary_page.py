@@ -328,6 +328,9 @@ with st.sidebar:
                         styles={
                             "icon": {"font-size": "23px"},
                             "title": {"font-weight": "bold"}
+                            "container": {"background-color": "#fffff"},
+                            "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px","--hover-font-size": "18px"},
+                            "nav-link-selected": {"background-color": "#ECCBC4", "color":"black", "font-weight":"normal"}
                         })
 
 if menu =='Home':
