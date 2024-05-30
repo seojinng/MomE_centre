@@ -77,17 +77,18 @@ st.markdown(
         font-size: 20px;
         margin-top: 20px;
         margin-bottom: 30px;
+        color: black;
+
     }
     .aboutUsContent {
         text-align: center;
-        margin-bottom: 35px;
+        margin: 15px 0px;
         font-size: 17px;
     }
     .divider {
         width: 250px;
-        height: 2px;
+        height: 1px;
         background-color: black;
-        margin-bottom: 55px;
     }
     .serviceComponent {
         position: relative;
@@ -211,12 +212,6 @@ if homeImg:
     st.write('')
     st.write('')
     st.write('')   
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
 
     row1, row2 = st.columns(2)
 
