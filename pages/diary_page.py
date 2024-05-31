@@ -23,7 +23,7 @@ tokenizer, model = load_model_and_tokenizer()
 # SentiWord_Dict.txt 파일 로드 함수
 def load_sentiword_dict(file_path):
     senti_dict = {}
-    with open(file_path, 'r', encoding='utf-8') as file):
+    with open((file_path, 'r', encoding='utf-8') as file):
         for line in file:
             parts = line.strip().split('\t')
             if len(parts) == 2:
