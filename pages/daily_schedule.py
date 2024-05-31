@@ -46,6 +46,11 @@ def init_db():
             comments TEXT
         )
     ''')
+    # user_id 열이 없는 경우 추가
+    c.execute("PRAGMA table_info(schedules)")
+    columns = [info[1] for info in c.fetchall()]
+    if 'user_id' not in columns:
+        c.execute("ALTER TABLE schedules ADD COLUMN user_id TEXT")
     conn.commit()
     conn.close()
 
