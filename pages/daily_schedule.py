@@ -61,7 +61,8 @@ def add_schedule(user_id, date, time, task, comments):
 def get_schedules(user_id):
     conn = sqlite3.connect('daily_schedule.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY date DESC, time DESC', (user_id,))
+    # 날짜와 시간을 DATETIME 형식으로 변환하여 정렬
+    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY date(date) DESC, time(time) DESC', (user_id,))
     schedules = c.fetchall()
     conn.close()
     return schedules
