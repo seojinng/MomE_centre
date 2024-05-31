@@ -61,7 +61,7 @@ def add_schedule(user_id, date, time, task, comments):
 def get_schedules(user_id):
     conn = sqlite3.connect('daily_schedule.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY datetime(date) DESC, datetime(time) DESC', (user_id,))
+    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY date DESC, time DESC', (user_id,))
     schedules = c.fetchall()
     conn.close()
     return schedules
@@ -85,7 +85,7 @@ def schedule_form(user_id):
         if task:
             add_schedule(user_id, date.strftime("%Y-%m-%d"), time.strftime("%H:%M:%S"), task, comments)
             st.success("일정이 저장되었습니다.")
-            st.rerun()
+            st.experimental_rerun()
         else:
             st.error("할 일을 입력해주세요.")
 
@@ -102,7 +102,7 @@ def schedule_list(user_id):
         """, unsafe_allow_html=True)
         if st.button("일정 삭제", key=f'delete_button_{schedule[0]}'):
             delete_schedule(schedule[0])
-            st.rerun()
+            st.experimental_rerun()
         st.write("---")
 
 # 일정 전체 삭제 함수
@@ -113,7 +113,7 @@ def delete_all_schedules(user_id):
     conn.commit()
     conn.close()
     st.success("모든 일정이 삭제되었습니다.")
-    st.rerun()
+    st.experimental_rerun()
 
 # Streamlit 앱 실행
 def main():
