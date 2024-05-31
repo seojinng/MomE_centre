@@ -1,8 +1,7 @@
 import sqlite3
 import streamlit as st
-from datetime import datetime, timedelta
+from datetime import datetime
 from streamlit_option_menu import option_menu
-import streamlit_calendar as cal
 
 # 로그인 상태를 확인하는 함수
 def check_login():
@@ -109,9 +108,9 @@ def schedule_list(user_id, date):
     schedules = get_schedules_by_date(user_id, date)
     for schedule in schedules:
         st.markdown(f"""
-        **시간:** {schedule[3]}  
-        **할 일:** {schedule[4]}  
-        **메모:** {schedule[5]}
+        **시간:** {schedule[1]}  
+        **할 일:** {schedule[2]}  
+        **메모:** {schedule[3]}
         """, unsafe_allow_html=True)
         if st.button("일정 삭제", key=f'delete_button_{schedule[0]}'):
             delete_schedule(schedule[0])
@@ -176,6 +175,9 @@ def main():
 
     st.title("하루 일과 관리")
 
+    # 일정 작성 폼
+    schedule_form(user_id)
+
     # 캘린더 컴포넌트를 사용하여 날짜 선택
     st.subheader("캘린더")
     selected_date = st.date_input("날짜 선택", datetime.today())
@@ -184,14 +186,8 @@ def main():
     if st.button("모든 일정 삭제", key='delete_all'):
         delete_all_schedules(user_id)
 
-    # 페이지를 두 부분으로 나누기
-    col1, col2 = st.columns(2)
-
-    with col1:
-        schedule_form(user_id)
-
-    with col2:
-        schedule_list(user_id, selected_date.strftime("%Y-%m-%d"))
+    # 해당 일자의 일정 목록
+    schedule_list(user_id, selected_date.strftime("%Y-%m-%d"))
 
 if __name__ == "__main__":
     init_db()
