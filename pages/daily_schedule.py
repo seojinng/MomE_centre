@@ -61,8 +61,7 @@ def add_schedule(user_id, date, time, task, comments):
 def get_schedules(user_id):
     conn = sqlite3.connect('daily_schedule.db')
     c = conn.cursor()
-    # 날짜와 시간을 TEXT로 처리하여 정렬
-    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY date(date) DESC, time(time) DESC', (user_id,))
+    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY date DESC, time DESC', (user_id,))
     schedules = c.fetchall()
     conn.close()
     return schedules
@@ -84,8 +83,7 @@ def schedule_form(user_id):
 
     if st.button("일정 저장"):
         if task:
-            # 날짜와 시간을 문자열로 변환
-            add_schedule(user_id, str(date), str(time), task, comments)
+            add_schedule(user_id, date.strftime("%Y-%m-%d"), time.strftime("%H:%M:%S"), task, comments)
             st.success("일정이 저장되었습니다.")
             st.experimental_rerun()
         else:
