@@ -173,7 +173,7 @@ def main():
         unsafe_allow_html=True
     )
 
-    st.title("하루 일과 관리")
+    st.title("To do list")
 
     # 일정 작성 폼
     schedule_form(user_id)
