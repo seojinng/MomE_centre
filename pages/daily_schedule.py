@@ -1,7 +1,8 @@
 import sqlite3
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, timedelta
 from streamlit_option_menu import option_menu
+import streamlit_calendar as cal
 
 # 로그인 상태를 확인하는 함수
 def check_login():
@@ -71,6 +72,14 @@ def get_schedules(user_id):
     conn.close()
     return schedules
 
+def get_schedules_by_date(user_id, date):
+    conn = sqlite3.connect('daily_schedule.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM schedules WHERE user_id = ? AND date = ? ORDER BY datetime(time) DESC', (user_id, date))
+    schedules = c.fetchall()
+    conn.close()
+    return schedules
+
 def delete_schedule(schedule_id):
     conn = sqlite3.connect('daily_schedule.db')
     c = conn.cursor()
@@ -95,15 +104,14 @@ def schedule_form(user_id):
             st.error("할 일을 입력해주세요.")
 
 # 일정 목록 표시
-def schedule_list(user_id):
-    st.subheader("하루 일과 목록")
-    schedules = get_schedules(user_id)
+def schedule_list(user_id, date):
+    st.subheader(f"{date}의 일과 목록")
+    schedules = get_schedules_by_date(user_id, date)
     for schedule in schedules:
         st.markdown(f"""
-        **날짜:** {schedule[1]}  
-        **시간:** {schedule[2]}  
-        **할 일:** {schedule[3]}  
-        **메모:** {schedule[4]}
+        **시간:** {schedule[3]}  
+        **할 일:** {schedule[4]}  
+        **메모:** {schedule[5]}
         """, unsafe_allow_html=True)
         if st.button("일정 삭제", key=f'delete_button_{schedule[0]}'):
             delete_schedule(schedule[0])
@@ -168,6 +176,10 @@ def main():
 
     st.title("하루 일과 관리")
 
+    # 캘린더 컴포넌트를 사용하여 날짜 선택
+    st.subheader("캘린더")
+    selected_date = st.date_input("날짜 선택", datetime.today())
+
     # 페이지 상단에 고정된 버튼
     if st.button("모든 일정 삭제", key='delete_all'):
         delete_all_schedules(user_id)
@@ -179,7 +191,7 @@ def main():
         schedule_form(user_id)
 
     with col2:
-        schedule_list(user_id)
+        schedule_list(user_id, selected_date.strftime("%Y-%m-%d"))
 
 if __name__ == "__main__":
     init_db()
