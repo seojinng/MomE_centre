@@ -62,7 +62,7 @@ def get_schedules(user_id):
     conn = sqlite3.connect('daily_schedule.db')
     c = conn.cursor()
     # 날짜와 시간을 TEXT로 처리하여 정렬
-    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY date DESC, time DESC', (user_id,))
+    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY date(date) DESC, time(time) DESC', (user_id,))
     schedules = c.fetchall()
     conn.close()
     return schedules
