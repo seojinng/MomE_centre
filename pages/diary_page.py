@@ -88,7 +88,6 @@ def recommend_topics(topics, num=6):
 def init_db():
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
-    cursor.execute('DROP TABLE IF EXISTS diary')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS diary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -253,7 +252,7 @@ def main():
                                 </div>''', unsafe_allow_html=True) 
             st.write("")
 
-            user_input = st.text_area('',placeholder="여기에 일기를 작성해 주세요.", height=300)
+            user_input = st.text_area('', placeholder="여기에 일기를 작성해 주세요.", height=300)
             
             if st.button("분석하기"):
                 probabilities = analyze_sentiment_bert(user_input)
