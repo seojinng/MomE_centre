@@ -85,6 +85,7 @@ def recommend_topics(topics, num=6):
     return random.sample(topics, num)
 
 # SQLite 데이터베이스 초기화 함수
+@st.experimental_singleton
 def init_db():
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
