@@ -88,11 +88,12 @@ def recommend_topics(topics, num=6):
 def init_db():
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
+    cursor.execute('DROP TABLE IF EXISTS diary')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS diary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT,
-            timestamp TEXT,
+            date TEXT,
             diary TEXT,
             sentiment TEXT,
             message TEXT
@@ -102,14 +103,14 @@ def init_db():
     conn.close()
 
 # SQLite 데이터베이스에 일기 데이터를 저장하는 함수
-def save_diary_to_db(username, timestamp, diary, sentiment, message):
+def save_diary_to_db(username, date, diary, sentiment, message):
     try:
         conn = sqlite3.connect('diary.db')
         cursor = conn.cursor()
         cursor.execute('''
-            INSERT INTO diary (username, timestamp, diary, sentiment, message)
+            INSERT INTO diary (username, date, diary, sentiment, message)
             VALUES (?, ?, ?, ?, ?)
-        ''', (username, timestamp, diary, str(sentiment), message))
+        ''', (username, date, diary, str(sentiment), message))
         conn.commit()
     except sqlite3.OperationalError as e:
         st.error(f"An error occurred while saving the diary: {e}")
@@ -121,13 +122,13 @@ def load_diary_data(username):
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
     try:
-        cursor.execute('SELECT timestamp, diary, sentiment, message FROM diary WHERE username = ?', (username,))
+        cursor.execute('SELECT date, diary, sentiment, message FROM diary WHERE username = ?', (username,))
         rows = cursor.fetchall()
     except sqlite3.OperationalError as e:
         st.error(f"An error occurred while loading the diary: {e}")
         rows = []
     conn.close()
-    return pd.DataFrame(rows, columns=['Timestamp', 'Diary', 'Sentiment', 'Message'])
+    return pd.DataFrame(rows, columns=['Date', 'Diary', 'Sentiment', 'Message'])
 
 # Streamlit 앱 메인 함수
 def main():
@@ -252,14 +253,13 @@ def main():
                                 </div>''', unsafe_allow_html=True) 
             st.write("")
 
-            user_input = st.text_area('', placeholder="여기에 일기를 작성해 주세요.", height=300)
+            user_input = st.text_area('',placeholder="여기에 일기를 작성해 주세요.", height=300)
             
             if st.button("분석하기"):
                 probabilities = analyze_sentiment_bert(user_input)
                 sentiment_probs, result_message = interpret_sentiment(probabilities)
 
-                timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                save_diary_to_db(st.session_state['logged_in_user'], timestamp, user_input, sentiment_probs, result_message)
+                save_diary_to_db(st.session_state['logged_in_user'], datetime.now().strftime('%Y-%m-%d %H:%M:%S'), user_input, sentiment_probs, result_message)
 
                 st.session_state['sentiment_probs'] = sentiment_probs
                 st.session_state['result_message'] = result_message
@@ -306,21 +306,17 @@ def main():
             diary_data = load_diary_data(st.session_state['logged_in_user'])
             
             if not diary_data.empty:
-                diary_data['Timestamp'] = pd.to_datetime(diary_data['Timestamp'])
-                diary_data = diary_data.sort_values(by='Timestamp', ascending=False)
-                selected_date = st.selectbox("날짜 선택", diary_data['Timestamp'].dt.date.unique())
+                selected_date = st.selectbox("날짜 선택", diary_data['Date'].unique())
                 
                 if selected_date:
-                    entries = diary_data[diary_data['Timestamp'].dt.date == selected_date]
-                    for index, entry in entries.iterrows():
-                        st.write(f"**일기 내용 ({entry['Timestamp']})**:")
-                        st.write(entry['Diary'])
-                        st.write("**감정 확률 분포**:")
-                        sentiment_probs = eval(entry['Sentiment'])
-                        for sentiment, prob in sentiment_probs.items():
-                            st.write(f"{sentiment}: {prob:.2%}")
-                        st.write(f"**선택된 메시지**: {entry['Message']}")
-                        st.write("---")
+                    entry = diary_data[diary_data['Date'] == selected_date].iloc[0]
+                    st.write(f"**일기 내용 ({selected_date})**:")
+                    st.write(entry['Diary'])
+                    st.write("**감정 확률 분포**:")
+                    sentiment_probs = eval(entry['Sentiment'])
+                    for sentiment, prob in sentiment_probs.items():
+                        st.write(f"{sentiment}: {prob:.2%}")
+                    st.write(f"**선택된 메시지**: {entry['Message']}")
             else:
                 st.write("아직 저장된 일기가 없습니다.")
     else:
