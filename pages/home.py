@@ -3,30 +3,18 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import os
 
-# Define and apply custom fonts using @font-face
+# Define and apply custom fonts using Google Fonts
 st.markdown(
     """
     <style>
-    @font-face {
-        font-family: 'NanumPen';
-        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2101@1.0/NanumPen.woff') format('woff');
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    @font-face {
-        font-family: 'NanumGothic';
-        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2104@1.0/NanumGothic.woff') format('woff');
-        font-weight: normal;
-        font-style: normal;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Nanum+Gothic:wght@400;700&display=swap');
 
     .title-font {
-        font-family: 'NanumPen', sans-serif;
+        font-family: 'Nanum Pen Script', cursive;
     }
 
     .body-font {
-        font-family: 'NanumGothic', sans-serif;
+        font-family: 'Nanum Gothic', sans-serif;
     }
 
     .stApp {
@@ -61,7 +49,7 @@ st.markdown(
         font-size: 60px;
         font-weight: bold;
         color: white;
-        font-family: 'NanumPen', sans-serif;
+        font-family: 'Nanum Pen Script', cursive;
     }
     .logo-below {
         position: absolute; /* 위치 고정 */
@@ -82,7 +70,7 @@ st.markdown(
         font-size: 40px;
         font-weight: 400px;
         color: white;
-        font-family: 'NanumPen', sans-serif;
+        font-family: 'Nanum Pen Script', cursive;
     }
     .mainContainer {
         display: flex;
@@ -101,13 +89,13 @@ st.markdown(
         margin-top: 20px;
         margin-bottom: 30px;
         color: black;
-        font-family: 'NanumPen', sans-serif;
+        font-family: 'Nanum Pen Script', cursive;
     }
     .aboutUsContent {
         text-align: center;
         margin: 15px 0px;
         font-size: 17px;
-        font-family: 'NanumGothic', sans-serif;
+        font-family: 'Nanum Gothic', sans-serif;
     }
     .divider {
         width: 250px;
@@ -151,7 +139,7 @@ st.markdown(
         font-weight: bold;
         color: black;
         line-height: 1.2;
-        font-family: 'NanumPen', sans-serif;
+        font-family: 'Nanum Pen Script', cursive;
     }
     .serviceDetail {
         color: black;
@@ -163,7 +151,7 @@ st.markdown(
         line-height: 1.4;
         width: 240px;
         height: 50px;
-        font-family: 'NanumGothic', sans-serif;
+        font-family: 'Nanum Gothic', sans-serif;
     }
     .imgContainer {
         width: 302px;
@@ -180,7 +168,7 @@ st.markdown(
     .contact {
         margin: 0px 12px;
         font-size: 10px;
-        font-family: 'NanumGothic', sans-serif;
+        font-family: 'Nanum Gothic', sans-serif;
     }
     </style>
     """,
