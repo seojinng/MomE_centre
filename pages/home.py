@@ -3,13 +3,34 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import os
 
-# Google Fonts에서 Noto Sans KR 폰트를 로드하는 스타일 추가
+# Define and apply custom fonts using @font-face
 st.markdown(
     """
     <style>
+    @font-face {
+        font-family: 'NanumPen';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2101@1.0/NanumPen.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'NanumGothic';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2104@1.0/NanumGothic.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .title-font {
+        font-family: 'NanumPen', sans-serif;
+    }
+
+    .body-font {
+        font-family: 'NanumGothic', sans-serif;
+    }
+
     .stApp {
         background: #F1E2DD;
-        font = 'Noto Serif KR' /* 기본 폰트 설정 */
     }
     .Container {
         width: 710px;
@@ -40,6 +61,7 @@ st.markdown(
         font-size: 60px;
         font-weight: bold;
         color: white;
+        font-family: 'NanumPen', sans-serif;
     }
     .logo-below {
         position: absolute; /* 위치 고정 */
@@ -60,6 +82,7 @@ st.markdown(
         font-size: 40px;
         font-weight: 400px;
         color: white;
+        font-family: 'NanumPen', sans-serif;
     }
     .mainContainer {
         display: flex;
@@ -78,12 +101,13 @@ st.markdown(
         margin-top: 20px;
         margin-bottom: 30px;
         color: black;
-
+        font-family: 'NanumPen', sans-serif;
     }
     .aboutUsContent {
         text-align: center;
         margin: 15px 0px;
         font-size: 17px;
+        font-family: 'NanumGothic', sans-serif;
     }
     .divider {
         width: 250px;
@@ -127,6 +151,7 @@ st.markdown(
         font-weight: bold;
         color: black;
         line-height: 1.2;
+        font-family: 'NanumPen', sans-serif;
     }
     .serviceDetail {
         color: black;
@@ -138,6 +163,7 @@ st.markdown(
         line-height: 1.4;
         width: 240px;
         height: 50px;
+        font-family: 'NanumGothic', sans-serif;
     }
     .imgContainer {
         width: 302px;
@@ -154,6 +180,7 @@ st.markdown(
     .contact {
         margin: 0px 12px;
         font-size: 10px;
+        font-family: 'NanumGothic', sans-serif;
     }
     </style>
     """,
@@ -182,19 +209,19 @@ Img4_path = './media/Img4.jpg'
 homeImg = load_image(image_path)
 if homeImg:
     st.markdown(f'''
-        <div class="Container">
+        <div class="Container body-font">
             <div class="homeImg">
                 <img src="data:image/jpg;base64,{homeImg}" />
                 <div class="textContainer">
-                    <div class="logo">MomE</div>
-                    <div class="logo-below">Always here for you</div>
+                    <div class="logo title-font">MomE</div>
+                    <div class="logo-below body-font">Always here for you</div>
                 </div>
-                <div class="adText">We Care<br>Your Mind</div>
+                <div class="adText title-font">We Care<br>Your Mind</div>
             </div>
             <div class="mainContainer">
-                <div class="contentIndex">About Us</div>
+                <div class="contentIndex title-font">About Us</div>
                 <div class="divider"></div>
-                <div class="aboutUsContent">
+                <div class="aboutUsContent body-font">
                     MomE은 산후우울증을 겪었거나 겪고 있는 엄마와 가족들을 위한 특별한 공간입니다.<br>
                     당신의 여정에 함께하며 희망과 회복의 길로 안내합니다. <br><br>
                     산후우울증은 많은 엄마들이 경험하는 어려운 감정입니다. <br>
@@ -203,7 +230,7 @@ if homeImg:
                     MomE와 함께하세요.
                 </div>
                 <div class="divider"></div>
-                <div class="contentIndex">Our Service</div>
+                <div class="contentIndex title-font">Our Service</div>
             </div>
         </div>
     ''', unsafe_allow_html=True)
@@ -211,18 +238,18 @@ if homeImg:
     st.write('')
     st.write('')
     st.write('')
-    st.write('')   
+    st.write('')
 
     row1, row2 = st.columns(2)
 
     with row1:
         st.markdown(f"""
-            <div class="serviceComponent">
+            <div class="serviceComponent body-font">
                 <div class="titleContainer">
                     <div class="titleBar"></div>
-                    <div class="title"> 육아 일기장<br>서비스</div>
+                    <div class="title title-font"> 육아 일기장<br>서비스</div>
                 </div>
-                <div class="serviceDetail"> 
+                <div class="serviceDetail">
                     산모가 육아 일기를 작성하며
                     자신의 마음도 함께 돌아볼 수 있는
                     서비스를 제공합니다.<br><br>
@@ -245,10 +272,10 @@ if homeImg:
             )
 
         st.markdown(f"""
-            <div class="serviceComponent">
+            <div class="serviceComponent body-font">
                 <div class="titleContainer">
                     <div class="titleBar"></div>
-                    <div class="title"> 산후우울증<br>바로알기</div>
+                    <div class="title title-font"> 산후우울증<br>바로알기</div>
                 </div>
                 <div class="serviceDetail">
                     산후우울증<br>(postpartum depression)<br>
@@ -284,10 +311,10 @@ if homeImg:
             )
 
         st.markdown(f"""
-            <div class="serviceComponent">
+            <div class="serviceComponent body-font">
                 <div class="titleContainer">
                     <div class="titleBar"></div>
-                    <div class="title">일기장 감정 <br>분석 서비스</div>
+                    <div class="title title-font">일기장 감정 <br>분석 서비스</div>
                 </div>
                 <div class="serviceDetail">
                     일기장 단어 분석을 통해<br>감정 변화를 추적하고 긍정적인<br>피드백을 제공하여 더 건강한 육아를 할 수 있도록 지원합니다.
@@ -309,16 +336,16 @@ if homeImg:
             )
 
         st.markdown(f"""
-            <div class="serviceComponent">
+            <div class="serviceComponent body-font">
                 <div class="titleContainer">
                     <div class="titleBar"></div>
-                    <div class="title"> 산후우울증 자가진단<br>테스트</div>
+                    <div class="title title-font"> 산후우울증 자가진단<br>테스트</div>
                 </div>
                 <div class="serviceDetail">
                     에딘버러 산후우울증 척도<br>
                     K-EPDS를 이용하여 산후 우울증<br>
                     자가진단 및 시각화 데이터를<br>
-                    제공합니다. 
+                    제공합니다.
                 </div>
             </div>
             """,
@@ -329,7 +356,7 @@ if homeImg:
 
     # 문의 및 저작권 표시
     st.markdown("""
-        <div class="contact">
+        <div class="contact body-font">
             MomE ｜ 주소 경기도 용인시 처인구 외대로 81 한국외국어대학교 ｜ 이메일 susu492@naver.com<br>
             ⓒ MomE
         </div>
@@ -356,7 +383,7 @@ with st.sidebar:
         st.switch_page('pages/SNS2.py')
     elif menu == 'To do list':
         st.switch_page('pages/daily_schedule.py')
-    elif menu == '하루 자가진단': 
+    elif menu == '하루 자가진단':
         st.switch_page('pages/self_diagnosis.py')
     elif menu == 'LogOut':
         st.switch_page('dd1.py')
