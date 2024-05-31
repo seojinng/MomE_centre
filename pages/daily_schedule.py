@@ -39,6 +39,7 @@ def init_db():
     c.execute('''
         CREATE TABLE IF NOT EXISTS schedules (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT,
             date TEXT,
             time TEXT,
             task TEXT,
@@ -49,18 +50,18 @@ def init_db():
     conn.close()
 
 # 데이터 삽입 및 조회 함수
-def add_schedule(date, time, task, comments):
+def add_schedule(user_id, date, time, task, comments):
     conn = sqlite3.connect('daily_schedule.db')
     c = conn.cursor()
-    c.execute('INSERT INTO schedules (date, time, task, comments) VALUES (?, ?, ?, ?)',
-              (date, time, task, comments))
+    c.execute('INSERT INTO schedules (user_id, date, time, task, comments) VALUES (?, ?, ?, ?, ?)',
+              (user_id, date, time, task, comments))
     conn.commit()
     conn.close()
 
-def get_schedules():
+def get_schedules(user_id):
     conn = sqlite3.connect('daily_schedule.db')
     c = conn.cursor()
-    c.execute('SELECT * FROM schedules ORDER BY datetime(date) DESC, datetime(time) DESC')
+    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY datetime(date) DESC, datetime(time) DESC', (user_id,))
     schedules = c.fetchall()
     conn.close()
     return schedules
@@ -73,7 +74,7 @@ def delete_schedule(schedule_id):
     conn.close()
 
 # 일정 작성 폼
-def schedule_form():
+def schedule_form(user_id):
     st.subheader("하루 일과 관리")
     date = st.date_input("날짜")
     time = st.time_input("시간")
@@ -82,22 +83,22 @@ def schedule_form():
 
     if st.button("일정 저장"):
         if task:
-            add_schedule(date.strftime("%Y-%m-%d"), time.strftime("%H:%M:%S"), task, comments)
+            add_schedule(user_id, date.strftime("%Y-%m-%d"), time.strftime("%H:%M:%S"), task, comments)
             st.success("일정이 저장되었습니다.")
             st.rerun()
         else:
             st.error("할 일을 입력해주세요.")
 
 # 일정 목록 표시
-def schedule_list():
+def schedule_list(user_id):
     st.subheader("하루 일과 목록")
-    schedules = get_schedules()
+    schedules = get_schedules(user_id)
     for schedule in schedules:
         st.markdown(f"""
-        **날짜:** {schedule[1]}  
-        **시간:** {schedule[2]}  
-        **할 일:** {schedule[3]}  
-        **메모:** {schedule[4]}
+        **날짜:** {schedule[2]}  
+        **시간:** {schedule[3]}  
+        **할 일:** {schedule[4]}  
+        **메모:** {schedule[5]}
         """, unsafe_allow_html=True)
         if st.button("일정 삭제", key=f'delete_button_{schedule[0]}'):
             delete_schedule(schedule[0])
@@ -105,10 +106,10 @@ def schedule_list():
         st.write("---")
 
 # 일정 전체 삭제 함수
-def delete_all_schedules():
+def delete_all_schedules(user_id):
     conn = sqlite3.connect('daily_schedule.db')
     c = conn.cursor()
-    c.execute('DELETE FROM schedules')
+    c.execute('DELETE FROM schedules WHERE user_id = ?', (user_id,))
     conn.commit()
     conn.close()
     st.success("모든 일정이 삭제되었습니다.")
@@ -118,6 +119,8 @@ def delete_all_schedules():
 def main():
     # 로그인 상태 확인
     check_login()
+    
+    user_id = st.session_state.get('user_id', 'default_user')  # 사용자 ID 확인
     
     # CSS 스타일 추가
     st.markdown(
@@ -162,16 +165,16 @@ def main():
 
     # 페이지 상단에 고정된 버튼
     if st.button("모든 일정 삭제", key='delete_all'):
-        delete_all_schedules()
+        delete_all_schedules(user_id)
 
     # 페이지를 두 부분으로 나누기
     col1, col2 = st.columns(2)
 
     with col1:
-        schedule_form()
+        schedule_form(user_id)
 
     with col2:
-        schedule_list()
+        schedule_list(user_id)
 
 if __name__ == "__main__":
     init_db()
