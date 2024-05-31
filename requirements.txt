@@ -7,3 +7,4 @@ torch
 matplotlib
 numpy
 plotly
+streamlit-calendar
