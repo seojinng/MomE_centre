@@ -3,35 +3,6 @@ import streamlit as st
 from datetime import datetime
 from streamlit_option_menu import option_menu
 
-# 로그인 상태를 확인하는 함수
-def check_login():
-    if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
-        st.error("로그인 후 이용해주세요")
-        st.stop()
-
-with st.sidebar:
-    menu = option_menu("MomE", ['Home', 'Dashboard', 'Diary', '육아 SNS', 'To do list', '하루 자가진단', 'LogOut'],
-                        icons=['bi bi-house-fill', 'bi bi-grid-1x2-fill', 'book-half', 'Bi bi-star-fill', 'Bi bi-calendar-check', 'bi bi-capsule-pill', 'box-arrow-in-right'],
-                        menu_icon="baby", default_index=4,
-                        styles={
-                            "icon": {"font-size": "23px"},
-                            "title": {"font-weight": "bold"}
-                        })
-
-    if menu == 'Dashboard':
-        st.switch_page("pages/dashboard_page.py")
-    elif menu == 'Diary':
-        st.switch_page("pages/diary_page.py")
-    elif menu == '육아 SNS':
-        st.switch_page("pages/SNS2.py")
-    elif menu == 'Home':
-        st.switch_page("pages/home.py")
-    elif menu == '하루 자가진단':
-        st.switch_page('pages/self_diagnosis.py')
-    elif menu == 'LogOut':
-        st.session_state['logged_in'] = False
-        st.switch_page("dd1.py")
-
 # 데이터베이스 초기화
 def init_db():
     conn = sqlite3.connect('daily_schedule.db')
@@ -48,6 +19,15 @@ def init_db():
     ''')
     conn.commit()
     conn.close()
+
+# 데이터베이스 스키마 확인
+def check_db_schema():
+    conn = sqlite3.connect('daily_schedule.db')
+    c = conn.cursor()
+    c.execute("PRAGMA table_info(schedules)")
+    schema = c.fetchall()
+    conn.close()
+    return schema
 
 # 데이터 삽입 및 조회 함수
 def add_schedule(user_id, date, time, task, comments):
@@ -118,10 +98,19 @@ def delete_all_schedules(user_id):
 # Streamlit 앱 실행
 def main():
     # 로그인 상태 확인
-    check_login()
+    if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
+        st.error("로그인 후 이용해주세요")
+        st.stop()
     
     user_id = st.session_state.get('user_id', 'default_user')  # 사용자 ID 확인
+
+    # 데이터베이스 초기화
+    init_db()
     
+    # 데이터베이스 스키마 확인
+    schema = check_db_schema()
+    st.write("DB Schema: ", schema)
+
     # CSS 스타일 추가
     st.markdown(
         """
@@ -177,5 +166,4 @@ def main():
         schedule_list(user_id)
 
 if __name__ == "__main__":
-    init_db()
     main()
