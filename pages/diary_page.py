@@ -86,7 +86,6 @@ def recommend_topics(topics, num=6):
     return random.sample(topics, num)
 
 # SQLite 데이터베이스 초기화 함수
-@st.experimental_singleton
 def init_db():
     if os.path.exists('diary.db'):
         os.remove('diary.db')
