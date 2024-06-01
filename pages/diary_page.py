@@ -89,6 +89,7 @@ def recommend_topics(topics, num=6):
 def init_db():
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
+    cursor.execute('DROP TABLE IF EXISTS diary')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS diary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
