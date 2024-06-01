@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # Initialize SQLite database
 def init_db():
-    conn = sqlite3.connect('self_diagnosis.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS self_diagnosis (
@@ -32,7 +32,7 @@ def init_db():
 
 # Function to save self-diagnosis result to the database
 def save_result(user, selected_date, scores, total_score):
-    conn = sqlite3.connect('self_diagnosis.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('''
         INSERT INTO self_diagnosis (user, date, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, total_score)
@@ -43,7 +43,7 @@ def save_result(user, selected_date, scores, total_score):
 
 # Function to retrieve self-diagnosis results from the database
 def get_results(user):
-    conn = sqlite3.connect('self_diagnosis.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('''
         SELECT date, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, total_score
