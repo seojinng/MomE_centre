@@ -89,7 +89,6 @@ def recommend_topics(topics, num=6):
 def init_db():
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
-    cursor.execute('DROP TABLE IF EXISTS diary')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS diary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -254,7 +253,7 @@ def main():
                                 </div>''', unsafe_allow_html=True) 
             st.write("")
 
-            user_input = st.text_area('',placeholder="여기에 일기를 작성해 주세요.", height=300)
+            user_input = st.text_area('', placeholder="여기에 일기를 작성해 주세요.", height=300)
             
             if st.button("분석하기"):
                 probabilities = analyze_sentiment_bert(user_input)
@@ -277,7 +276,6 @@ def main():
                 st.write(f"선택된 메시지: {st.session_state['result_message']}")
                 
                 st.write("### 감정 분포")
-                # 원형 차트로 변경
                 custom_colors = ['#A8E6CF','#DCEDC1','#E0E0E0','#FFAAA5','#FF8B94']  # 원하는 색상 리스트
                 fig = px.pie(values=list(st.session_state['sentiment_probs'].values()), names=list(st.session_state['sentiment_probs'].keys()), title="감정 분포", color_discrete_sequence=custom_colors)
                 st.plotly_chart(fig)
@@ -332,17 +330,17 @@ with st.sidebar:
                             "title": {"font-weight": "bold"}
                         })
 
-if menu =='Home':
+if menu == 'Home':
     st.switch_page("pages/home.py")
-elif menu =='Dashboard':
+elif menu == 'Dashboard':
     st.switch_page("pages/dashboard_page.py")
 elif menu == '육아 SNS':
     st.switch_page("pages/SNS2.py")
 elif menu == 'To do list':
     st.switch_page("pages/daily_schedule.py")
-elif menu =='하루 자가진단': 
+elif menu == '하루 자가진단': 
     st.switch_page("pages/self_diagnosis.py")
-elif menu =='LogOut':
+elif menu == 'LogOut':
     st.switch_page('dd1.py')
 
 if __name__ == "__main__":
