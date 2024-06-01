@@ -108,9 +108,9 @@ def schedule_list(user_id, date):
     schedules = get_schedules_by_date(user_id, date)
     for schedule in schedules:
         st.markdown(f"""
-        **시간:** {schedule[1]}  
-        **할 일:** {schedule[2]}  
-        **메모:** {schedule[3]}
+        **시간:** {schedule[0]}  
+        **할 일:** {schedule[1]}  
+        **메모:** {schedule[2]}
         """, unsafe_allow_html=True)
         if st.button("일정 삭제", key=f'delete_button_{schedule[0]}'):
             delete_schedule(schedule[0])
