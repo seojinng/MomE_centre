@@ -86,7 +86,7 @@ def recommend_topics(topics, num=6):
 
 # SQLite 데이터베이스 초기화 함수
 def init_db():
-    conn = sqlite3.connect('diary.db')
+    conn = sqlite3.connect('data.db')
     cursor = conn.cursor()
     cursor.execute('DROP TABLE IF EXISTS diary')
     cursor.execute('''
@@ -105,7 +105,7 @@ def init_db():
 # SQLite 데이터베이스에 일기 데이터를 저장하는 함수
 def save_diary_to_db(username, date, diary, sentiment, message):
     try:
-        conn = sqlite3.connect('diary.db')
+        conn = sqlite3.connect('data.db')
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO diary (username, date, diary, sentiment, message)
@@ -119,7 +119,7 @@ def save_diary_to_db(username, date, diary, sentiment, message):
 
 # SQLite 데이터베이스에서 특정 사용자의 일기 데이터를 불러오는 함수
 def load_diary_data(username):
-    conn = sqlite3.connect('diary.db')
+    conn = sqlite3.connect('data.db')
     cursor = conn.cursor()
     try:
         cursor.execute('SELECT date, diary, sentiment, message FROM diary WHERE username = ?', (username,))
