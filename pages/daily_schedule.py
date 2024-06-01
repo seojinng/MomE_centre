@@ -1,3 +1,4 @@
+User
 import sqlite3
 import streamlit as st
 from datetime import datetime
@@ -46,7 +47,7 @@ def init_db():
             comments TEXT
         )
     ''')
-    # user_id 열이 있는지 확인하고 없으면 추가
+    # user_id 열이 없는 경우 추가
     c.execute("PRAGMA table_info(schedules)")
     columns = [info[1] for info in c.fetchall()]
     if 'user_id' not in columns:
@@ -98,7 +99,7 @@ def schedule_form(user_id):
         if task:
             add_schedule(user_id, date.strftime("%Y-%m-%d"), time.strftime("%H:%M:%S"), task, comments)
             st.success("일정이 저장되었습니다.")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("할 일을 입력해주세요.")
 
@@ -114,7 +115,7 @@ def schedule_list(user_id, date):
         """, unsafe_allow_html=True)
         if st.button("일정 삭제", key=f'delete_button_{schedule[0]}'):
             delete_schedule(schedule[0])
-            st.experimental_rerun()
+            st.rerun()
         st.write("---")
 
 # 일정 전체 삭제 함수
@@ -125,7 +126,7 @@ def delete_all_schedules(user_id):
     conn.commit()
     conn.close()
     st.success("모든 일정이 삭제되었습니다.")
-    st.experimental_rerun()
+    st.rerun()
 
 # Streamlit 앱 실행
 def main():
