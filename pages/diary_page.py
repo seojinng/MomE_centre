@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
@@ -87,6 +88,8 @@ def recommend_topics(topics, num=6):
 # SQLite 데이터베이스 초기화 함수
 @st.experimental_singleton
 def init_db():
+    if os.path.exists('diary.db'):
+        os.remove('diary.db')
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
     cursor.execute('''
