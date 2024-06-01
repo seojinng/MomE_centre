@@ -1,3 +1,4 @@
+User
 import streamlit as st
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
@@ -24,7 +25,7 @@ tokenizer, model = load_model_and_tokenizer()
 def load_sentiword_dict(file_path):
     senti_dict = {}
     with open(file_path, 'r', encoding='utf-8') as file:
-        for line in file):
+        for line in file:
             parts = line.strip().split('\t')
             if len(parts) == 2:
                 word, score = parts
@@ -88,6 +89,7 @@ def recommend_topics(topics, num=6):
 def init_db():
     conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
+    cursor.execute('DROP TABLE IF EXISTS diary')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS diary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
