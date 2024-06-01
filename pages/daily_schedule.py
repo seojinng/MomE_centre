@@ -1,4 +1,3 @@
-User
 import sqlite3
 import streamlit as st
 from datetime import datetime
