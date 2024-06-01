@@ -85,20 +85,12 @@ def recommend_topics(topics, num=6):
     return random.sample(topics, num)
 
 # SQLite 데이터베이스 초기화 함수
+@st.experimental_singleton
 def init_db():
-    conn = sqlite3.connect('daily_schedule.db')
-    c = conn.cursor()
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS schedules (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id TEXT,
-            date TEXT,
-            time TEXT,
-            task TEXT,
-            comments TEXT
-        )
-    ''')
-    c.execute('''
+    conn = sqlite3.connect('diary.db')
+    cursor = conn.cursor()
+    cursor.execute('DROP TABLE IF EXISTS diary')
+    cursor.execute('''
         CREATE TABLE IF NOT EXISTS diary (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT,
@@ -111,41 +103,10 @@ def init_db():
     conn.commit()
     conn.close()
 
-# 데이터 삽입 및 조회 함수
-def add_schedule(user_id, date, time, task, comments):
-    conn = sqlite3.connect('daily_schedule.db')
-    c = conn.cursor()
-    c.execute('INSERT INTO schedules (user_id, date, time, task, comments) VALUES (?, ?, ?, ?, ?)',
-              (user_id, date, time, task, comments))
-    conn.commit()
-    conn.close()
-
-def get_schedules(user_id):
-    conn = sqlite3.connect('daily_schedule.db')
-    c = conn.cursor()
-    c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY datetime(date) DESC, datetime(time) DESC', (user_id,))
-    schedules = c.fetchall()
-    conn.close()
-    return schedules
-
-def get_schedules_by_date(user_id, date):
-    conn = sqlite3.connect('daily_schedule.db')
-    c = conn.cursor()
-    c.execute('SELECT * FROM schedules WHERE user_id = ? AND date = ? ORDER BY datetime(time) DESC', (user_id, date))
-    schedules = c.fetchall()
-    conn.close()
-    return schedules
-
-def delete_schedule(schedule_id):
-    conn = sqlite3.connect('daily_schedule.db')
-    c = conn.cursor()
-    c.execute('DELETE FROM schedules WHERE id = ?', (schedule_id,))
-    conn.commit()
-    conn.close()
-
+# SQLite 데이터베이스에 일기 데이터를 저장하는 함수
 def save_diary_to_db(username, date, diary, sentiment, message):
     try:
-        conn = sqlite3.connect('daily_schedule.db')
+        conn = sqlite3.connect('diary.db')
         cursor = conn.cursor()
         cursor.execute('''
             INSERT INTO diary (username, date, diary, sentiment, message)
@@ -157,8 +118,9 @@ def save_diary_to_db(username, date, diary, sentiment, message):
     finally:
         conn.close()
 
+# SQLite 데이터베이스에서 특정 사용자의 일기 데이터를 불러오는 함수
 def load_diary_data(username):
-    conn = sqlite3.connect('daily_schedule.db')
+    conn = sqlite3.connect('diary.db')
     cursor = conn.cursor()
     try:
         cursor.execute('SELECT date, diary, sentiment, message FROM diary WHERE username = ?', (username,))
@@ -169,50 +131,9 @@ def load_diary_data(username):
     conn.close()
     return pd.DataFrame(rows, columns=['Date', 'Diary', 'Sentiment', 'Message'])
 
-# 일정 작성 폼
-def schedule_form(user_id):
-    st.subheader("하루 일과 관리")
-    date = st.date_input("날짜")
-    time = st.time_input("시간")
-    task = st.text_input("할 일")
-    comments = st.text_area("메모")
-
-    if st.button("일정 저장"):
-        if task:
-            add_schedule(user_id, date.strftime("%Y-%m-%d"), time.strftime("%H:%M:%S"), task, comments)
-            st.success("일정이 저장되었습니다.")
-            st.rerun()
-        else:
-            st.error("할 일을 입력해주세요.")
-
-# 일정 목록 표시
-def schedule_list(user_id, date):
-    st.subheader(f"{date}의 일과 목록")
-    schedules = get_schedules_by_date(user_id, date)
-    for schedule in schedules:
-        st.markdown(f"""
-        **시간:** {schedule[1]}  
-        **할 일:** {schedule[2]}  
-        **메모:** {schedule[3]}
-        """, unsafe_allow_html=True)
-        if st.button("일정 삭제", key=f'delete_button_{schedule[0]}'):
-            delete_schedule(schedule[0])
-            st.rerun()
-        st.write("---")
-
-# 일정 전체 삭제 함수
-def delete_all_schedules(user_id):
-    conn = sqlite3.connect('daily_schedule.db')
-    c = conn.cursor()
-    c.execute('DELETE FROM schedules WHERE user_id = ?', (user_id,))
-    conn.commit()
-    conn.close()
-    st.success("모든 일정이 삭제되었습니다.")
-    st.rerun()
-
 # Streamlit 앱 메인 함수
 def main():
-    # 데이터베이스 초기화
+    # SQLite 데이터베이스 초기화
     init_db()
 
     # CSS 스타일 추가
@@ -220,96 +141,100 @@ def main():
         """
         <style>
         body {
-            background-color: #f0f2f6;
+            background-color: #FFFFFF;
+            color: #000000;
+            font-family: 'Helvetica', sans-serif;
         }
+        .stApp{
+            background: #F1E2DD;
+            }
+            /* Customize tab content background */
+        .stTabs [role="tabpanel"] {
+            background-color: #ffffff; /* Change this to your desired content background color */
+            border-top: none;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 5px 5px 5px #DFDCD5;
+            height: 750px;
+            }
         .reportview-container .main .block-container {
+            max-width: 80%;
+            margin: auto;
             padding: 2rem;
         }
-        .stTextInput > div > div > input, .stTextArea > div > textarea {
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
+        .stTextArea textarea {
+            height: 300px !important;
+            font-size: 16px;
         }
         .stButton button {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #FEF8F6;
+            color: black;
             border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            font-size: 12px;
-            margin: 5px 2px;
+            border-radius: 12px;
+            padding: 10px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
             cursor: pointer;
         }
         .stButton button:hover {
-            background-color: #45a049;
+            background-color: #FFEEEE;
         }
-        .fixed-button {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 9999;
+        .stDataFrame {
+            font-size: 16px;
         }
+        .topic-card{
+            background-color: #FEF8F6;
+            font-weight: normal;
+            box-shadow: 5px 5px 5px #DFDCD5;
+            margin:5px;
+            border-radius: 10px;
+            padding: 7px;}
+        }
+        .stMarkdown h1 {
+            font-size: 24px;
+        }
+        .title{
+            font-size: 60px;
+            font-weight: bold;
+            text-align: start;
+            width: 50px;
+            line-height: 1;
+            letter-spacing: 0;
+            color: #4A4A4A;
+        }
+        .subtitle{
+            font-size: 25px;
+            font-weight:bold;
+            text-align: start;
+            line-height: 1;
+            letter-spacing: 0;
+            margin-bottom: 10px;
+            color: #4A4A4A;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .topic{
+            margin: 7px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
         </style>
         """,
         unsafe_allow_html=True
     )
 
-    with st.sidebar:
-        menu = option_menu("MomE", ['Home', 'Dashboard', 'Diary', '육아 SNS', 'To do list', '하루 자가진단', 'LogOut'],
-                            icons=['bi bi-house-fill', 'bi bi-grid-1x2-fill', 'book-half', 'Bi bi-star-fill', 'Bi bi-calendar-check', 'bi bi-capsule-pill', 'box-arrow-in-right'],
-                            menu_icon="baby", default_index=4,
-                            styles={
-                                "icon": {"font-size": "23px"},
-                                "title": {"font-weight": "bold"}
-                            })
-
-        if menu == 'Dashboard':
-            st.switch_page("pages/dashboard_page.py")
-        elif menu == 'Diary':
-            st.switch_page("pages/diary_page.py")
-        elif menu == '육아 SNS':
-            st.switch_page("pages/SNS2.py")
-        elif menu == 'Home':
-            st.switch_page("pages/home.py")
-        elif menu == '하루 자가진단':
-            st.switch_page('pages/self_diagnosis.py')
-        elif menu == 'LogOut':
-            st.session_state['logged_in'] = False
-            st.switch_page("dd1.py")
-
-    # 로그인 상태 확인
-    if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
-        st.error("로그인 후 이용해주세요")
-        st.stop()
-    
-    user_id = st.session_state.get('user_id', 'guest')
-
-    # 탭 구성
-    tabs = st.tabs(["To do list", "Diary"])
-
-    with tabs[0]:
-        st.title("To do list")
-
-        # 일정 작성 폼
-        schedule_form(user_id)
-
-        # 캘린더 컴포넌트를 사용하여 날짜 선택
-        st.subheader("캘린더")
-        selected_date = st.date_input("날짜 선택", datetime.today())
-
-        # 페이지 상단에 고정된 버튼
-        if st.button("모든 일정 삭제", key='delete_all'):
-            delete_all_schedules(user_id)
-
-        # 해당 일자의 일정 목록
-        schedule_list(user_id, selected_date.strftime("%Y-%m-%d"))
-
-    with tabs[1]:
+    if 'logged_in' in st.session_state and st.session_state['logged_in']:
         st.image('media/diaryTitleImg.jpg')
         
-        diary_tabs = st.tabs(["일기 작성", "분석 결과", "지난 일기"])
+        tabs = st.tabs(["일기 작성", "분석 결과", "지난 일기"])
 
-        with diary_tabs[0]:
+        with tabs[0]:
             st.markdown(
                 '''
                   <div class="subtitle">일기 주제 추천</div>
@@ -343,7 +268,7 @@ def main():
 
                 st.success("분석이 완료되었습니다. '분석 결과' 탭을 확인하세요.")
 
-        with diary_tabs[1]:
+        with tabs[1]:
             if 'sentiment_probs' in st.session_state:
                 st.write("### 분석 결과")
                 st.write("감정 확률 분포:")
@@ -377,7 +302,7 @@ def main():
             else:
                 st.write("아직 분석 결과가 없습니다. 먼저 '일기 작성' 탭에서 분석을 진행하세요.")
 
-        with diary_tabs[2]:
+        with tabs[2]:
             st.write("### 지난 일기")
             diary_data = load_diary_data(st.session_state['logged_in_user'])
             
@@ -395,6 +320,30 @@ def main():
                     st.write(f"**선택된 메시지**: {entry['Message']}")
             else:
                 st.write("아직 저장된 일기가 없습니다.")
+    else:
+        st.error("로그인 후 이용해주세요")
+
+with st.sidebar:
+    menu = option_menu("MomE", ['Home','Dashboard','Diary','육아 SNS','To do list', '하루 자가진단', 'LogOut'],
+                        icons=['bi bi-house-fill','bi bi-grid-1x2-fill','book-half','Bi bi-star-fill','Bi bi-calendar-check' ,'bi bi-capsule-pill', 'box-arrow-in-right'],
+                        menu_icon="baby", default_index=2,
+                        styles={
+                            "icon": {"font-size": "23px"},
+                            "title": {"font-weight": "bold"}
+                        })
+
+if menu =='Home':
+    st.switch_page("pages/home.py")
+elif menu =='Dashboard':
+    st.switch_page("pages/dashboard_page.py")
+elif menu == '육아 SNS':
+    st.switch_page("pages/SNS2.py")
+elif menu == 'To do list':
+    st.switch_page("pages/daily_schedule.py")
+elif menu =='하루 자가진단': 
+    st.switch_page("pages/self_diagnosis.py")
+elif menu =='LogOut':
+    st.switch_page('dd1.py')
 
 if __name__ == "__main__":
     main()
