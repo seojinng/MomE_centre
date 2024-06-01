@@ -34,7 +34,7 @@ with st.sidebar:
 
 # 데이터베이스 초기화
 def init_db():
-    conn = sqlite3.connect('daily_schedule.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS schedules (
@@ -56,7 +56,7 @@ def init_db():
 
 # 데이터 삽입 및 조회 함수
 def add_schedule(user_id, date, time, task, comments):
-    conn = sqlite3.connect('daily_schedule.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('INSERT INTO schedules (user_id, date, time, task, comments) VALUES (?, ?, ?, ?, ?)',
               (user_id, date, time, task, comments))
@@ -64,7 +64,7 @@ def add_schedule(user_id, date, time, task, comments):
     conn.close()
 
 def get_schedules(user_id):
-    conn = sqlite3.connect('daily_schedule.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('SELECT * FROM schedules WHERE user_id = ? ORDER BY datetime(date) DESC, datetime(time) DESC', (user_id,))
     schedules = c.fetchall()
@@ -72,7 +72,7 @@ def get_schedules(user_id):
     return schedules
 
 def get_schedules_by_date(user_id, date):
-    conn = sqlite3.connect('daily_schedule.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('SELECT * FROM schedules WHERE user_id = ? AND date = ? ORDER BY datetime(time) DESC', (user_id, date))
     schedules = c.fetchall()
@@ -80,7 +80,7 @@ def get_schedules_by_date(user_id, date):
     return schedules
 
 def delete_schedule(schedule_id):
-    conn = sqlite3.connect('daily_schedule.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('DELETE FROM schedules WHERE id = ?', (schedule_id,))
     conn.commit()
@@ -119,7 +119,7 @@ def schedule_list(user_id, date):
 
 # 일정 전체 삭제 함수
 def delete_all_schedules(user_id):
-    conn = sqlite3.connect('daily_schedule.db')
+    conn = sqlite3.connect('data.db')
     c = conn.cursor()
     c.execute('DELETE FROM schedules WHERE user_id = ?', (user_id,))
     conn.commit()
